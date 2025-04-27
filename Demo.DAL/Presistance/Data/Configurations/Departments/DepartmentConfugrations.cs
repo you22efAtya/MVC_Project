@@ -13,7 +13,7 @@ namespace Demo.DAL.Presistance.Data.Configurations.Departments
     {
         public void Configure(EntityTypeBuilder<Department> builder)
         {
-            builder.Property(D => D.Name).UseIdentityColumn(10, 10);
+            builder.Property(D => D.Id).UseIdentityColumn(10, 10);
             builder.Property(D => D.Name).HasColumnType("nvarchar(50)").IsRequired();
             builder.Property(D => D.Code).HasColumnType("nvarchar(50)").IsRequired();
             builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("GETDATE()");//update and add
