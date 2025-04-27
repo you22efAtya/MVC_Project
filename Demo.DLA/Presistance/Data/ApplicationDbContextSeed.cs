@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.DLA.Presistance.Data
+namespace Demo.DAL.Presistance.Data
 {
     public static class ApplicationDbContextSeed
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.DLA.Presistance.Data
+namespace Demo.DAL.Presistance.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -22,6 +22,5 @@ namespace Demo.DLA.Presistance.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);//apply all configurations classes
         }
     }
-    {
-    }
+    
 }

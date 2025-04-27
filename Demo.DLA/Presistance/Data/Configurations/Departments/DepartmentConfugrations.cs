@@ -1,4 +1,4 @@
-﻿using Demo.DLA.Entities.Departments;
+﻿using Demo.DAL.Entities.Departments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.DLA.Presistance.Data.Configurations.Departments
+namespace Demo.DAL.Presistance.Data.Configurations.Departments
 {
     internal class DepartmentConfugrations : IEntityTypeConfiguration<Department>
     {

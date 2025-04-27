@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.DLA.Entities.Departments
+namespace Demo.DAL.Entities.Departments
 {
     internal class Department : ModelBase
     {
