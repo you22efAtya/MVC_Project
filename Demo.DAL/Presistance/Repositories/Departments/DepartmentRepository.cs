@@ -50,5 +50,9 @@ namespace Demo.DAL.Presistance.Repositories.Departments
             return _dbContext.SaveChanges();
         }
 
+        public IQueryable<Department> GetAllQueryable()
+        {
+            return _dbContext.Departments;
+        }
     }
 }
