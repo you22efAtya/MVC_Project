@@ -1,3 +1,4 @@
+using Demo.BLL.Services.Departments;
 using Demo.DAL.Presistance.Data;
 using Demo.DAL.Presistance.Repositories.Departments;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace Demo.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
