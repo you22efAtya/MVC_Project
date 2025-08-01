@@ -1,5 +1,6 @@
 ﻿using Demo.BLL.Dtos;
 using Demo.BLL.Services.Departments;
+using Demo.PL.ViewModels.Departments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.PL.Controllers
@@ -80,6 +81,92 @@ namespace Demo.PL.Controllers
                 return NotFound();//404
             }
             return View(department);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();//400
+            }
+            var department = _departmentService.GetDepartmentById(id.Value);
+            if (department is null)
+            {
+                return NotFound();//404
+            }
+            return View(new DepartmentEditViewModel()
+            {
+                Name = department.Name,
+                Description = department.Description,
+                Code = department.Code,
+                CreationDate = department.CreationDate
+            });
+        }
+        [HttpPost]
+        public IActionResult Edit(int id,DepartmentEditViewModel departmentVM)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(departmentVM);
+            }
+            var message = string.Empty;
+            try
+            {
+                var departmentDto = new DepartmentToUpdateDto()
+                {
+                    Id = id,
+                    Name = departmentVM.Name,
+                    Description = departmentVM.Description,
+                    Code = departmentVM.Code,
+                    CreationDate = departmentVM.CreationDate
+                };
+                var result = _departmentService.UpdateDepartment(departmentDto);
+                if (result > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    message = "Failed to update department.";
+                    ModelState.AddModelError(string.Empty, message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                message = _env.IsDevelopment() ? ex.Message : "Department can not be updated";
+            }
+            return View(departmentVM);
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var message = string.Empty;
+            try
+            {
+                var department = _departmentService.GetDepartmentById(id);
+                if (department is null)
+                {
+                    return NotFound();//404
+                }
+                var result = _departmentService.DeleteDepartment(id);
+                if (result)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    message = "Failed to delete department.";
+                    ModelState.AddModelError(string.Empty, message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                message = _env.IsDevelopment() ? ex.Message : "Department can not be deleted";
+            }
+            return View(nameof(Index));
         }
 
     }
