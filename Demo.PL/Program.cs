@@ -1,6 +1,8 @@
 using Demo.BLL.Services.Departments;
+using Demo.BLL.Services.Employees;
 using Demo.DAL.Presistance.Data;
 using Demo.DAL.Presistance.Repositories.Departments;
+using Demo.DAL.Presistance.Repositories.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.PL
@@ -19,6 +21,9 @@ namespace Demo.PL
             });
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
