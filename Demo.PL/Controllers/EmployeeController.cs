@@ -1,9 +1,6 @@
-﻿using Demo.BLL.Dtos;
-using Demo.BLL.Dtos.Departments;
-using Demo.BLL.Dtos.Employees;
-using Demo.BLL.Services.Departments;
+﻿using Demo.BLL.Dtos.Employees;
 using Demo.BLL.Services.Employees;
-using Demo.PL.ViewModels.Departments;
+using Demo.DAL.Entities.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.PL.Controllers
@@ -51,7 +48,7 @@ namespace Demo.PL.Controllers
                 }
                 else
                 {
-                    message = "Failed to create department.";
+                    message = "Failed to create Employee.";
                     ModelState.AddModelError(string.Empty, message);
                     return View(employeeDto);
                 }
@@ -89,61 +86,60 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        //public IActionResult Edit(int? id)
-        //{
-        //    //if (id is null)
-        //    //{
-        //    //    return BadRequest();//400
-        //    //}
-        //    //var employee = _EmployeeService.GetEmployeeById(id.Value);
-        //    //if (employee is null)
-        //    //{
-        //    //    return NotFound();//404
-        //    //}
-        //    //return View(new DepartmentEditViewModel()
-        //    //{
-        //    //    Name = employee.Name,
-        //    //    Description = employee.Description,
-        //    //    Code = employee.Code,
-        //    //    CreationDate = employee.CreationDate
-        //    //});
-        //}
-        //[HttpPost]
-        //public IActionResult Edit(int id,DepartmentEditViewModel departmentVM)
-        //{
-        //    //if(!ModelState.IsValid)
-        //    //{
-        //    //    return View(departmentVM);
-        //    //}
-        //    //var message = string.Empty;
-        //    //try
-        //    //{
-        //    //    var departmentDto = new DepartmentToUpdateDto()
-        //    //    {
-        //    //        Id = id,
-        //    //        Name = departmentVM.Name,
-        //    //        Description = departmentVM.Description,
-        //    //        Code = departmentVM.Code,
-        //    //        CreationDate = departmentVM.CreationDate
-        //    //    };
-        //    //    var result = _departmentService.UpdateDepartment(departmentDto);
-        //    //    if (result > 0)
-        //    //    {
-        //    //        return RedirectToAction(nameof(Index));
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        message = "Failed to update department.";
-        //    //        ModelState.AddModelError(string.Empty, message);
-        //    //    }
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    _logger.LogError(ex, ex.Message);
-        //    //    message = _env.IsDevelopment() ? ex.Message : "Department can not be updated";
-        //    //}
-        //    //return View(departmentVM);
-        //}
+        public IActionResult Edit(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();//400
+            }
+            var employee = _EmployeeService.GetEmployeeById(id.Value);
+            if (employee is null)
+            {
+                return NotFound();//404
+            }
+            return View(new EmployeeToUpdateDto()
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Age = employee.Age,
+                Salary = employee.Salary,
+                IsActive = employee.IsActive,
+                Email = employee.Email,
+                PhoneNumber = employee.PhoneNumber,
+                Address = employee.Address,
+                HiringDate = employee.HiringDate,
+                Gender = Enum.TryParse<Gender>(employee.Gender,out var gender) ? gender : default,
+                EmployeeType = Enum.TryParse<EmployeeType>(employee.EmployeeType, out var empType) ? empType : default,
+            });
+        }
+        [HttpPost]
+        public IActionResult Edit(int id, EmployeeToUpdateDto employeeDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(employeeDto);
+            }
+            var message = string.Empty;
+            try
+            {
+                var result = _EmployeeService.UpdateEmployee(employeeDto);
+                if (result > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    message = "Failed to update Employee.";
+                    ModelState.AddModelError(string.Empty, message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                message = _env.IsDevelopment() ? ex.Message : "Employee can not be updated";
+            }
+            return View(employeeDto);
+        }
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -162,14 +158,14 @@ namespace Demo.PL.Controllers
                 }
                 else
                 {
-                    message = "Failed to delete department.";
+                    message = "Failed to delete Employee.";
                     ModelState.AddModelError(string.Empty, message);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                message = _env.IsDevelopment() ? ex.Message : "Department can not be deleted";
+                message = _env.IsDevelopment() ? ex.Message : "Employee can not be deleted";
             }
             return View(nameof(Index));
         }

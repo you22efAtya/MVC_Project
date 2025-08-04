@@ -31,13 +31,13 @@
             @foreach (var employee in Model)
             {
                 <tr>
-                    <td>@employee.Name</td>
-                    <td>@employee.Email</td>
-                    <td>@employee.EmployeeType</td>
-                    <td>@employee.Age</td>
-                    <td>@employee.Salary</td>
-                    <td>@employee.IsActive</td>
-                    <td>@employee.Gender</td>
+                    <td>@Html.DisplayFor( e=> employee.Name)</td>
+                    <td>@Html.DisplayFor( e=> employee.Email)</td>
+                    <td>@Html.DisplayFor( e=> employee.EmployeeType)</td>
+                    <td>@Html.DisplayFor( e=> employee.Age)</td>
+                    <td>@Html.DisplayFor( e=> employee.Salary)</td>
+                    <td>@Html.DisplayFor( e=> employee.IsActive)</td>
+                    <td>@Html.DisplayFor( e=> employee.Gender)</td>
 
                     <td>
                         <a class="btn btn-primary" asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Id">
