@@ -12,7 +12,7 @@ namespace Demo.PL.Controllers
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger,IWebHostEnvironment env)
+        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment env)
         {
             this._departmentService = departmentService;
             this._logger = logger;
@@ -35,13 +35,13 @@ namespace Demo.PL.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(departmentDto);
             }
             var message = string.Empty;
             try
             {
                 var result = _departmentService.CreateDepartment(departmentDto);
-                if(result > 0)
+                if (result > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -55,7 +55,7 @@ namespace Demo.PL.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                if(_env.IsDevelopment())
+                if (_env.IsDevelopment())
                 {
                     message = ex.Message;
                     return View(departmentDto);
@@ -63,7 +63,7 @@ namespace Demo.PL.Controllers
                 else
                 {
                     message = "Department can not be created";
-                    return View("Error",message);
+                    return View("Error", message);
                 }
 
             }
@@ -105,9 +105,9 @@ namespace Demo.PL.Controllers
             });
         }
         [HttpPost]
-        public IActionResult Edit(int id,DepartmentEditViewModel departmentVM)
+        public IActionResult Edit(int id, DepartmentEditViewModel departmentVM)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(departmentVM);
             }

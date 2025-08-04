@@ -55,6 +55,7 @@ namespace Demo.BLL.Services.Employees
         {
             return _employeeRepository
             .GetAllQueryable()
+            .Where(E => !E.IsDeleted)
             .Select(employee => new EmployeeToReturnDto
             {
                 Id = employee.Id,
