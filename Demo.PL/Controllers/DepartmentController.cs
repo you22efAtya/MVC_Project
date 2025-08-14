@@ -31,16 +31,23 @@ namespace Demo.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(DepartmentToCreateDto departmentDto)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(departmentDto);
+                return View(departmentVM);
             }
             var message = string.Empty;
             try
             {
-                var result = _departmentService.CreateDepartment(departmentDto);
+                var result = _departmentService.CreateDepartment(new DepartmentToCreateDto()
+                {
+                    Name = departmentVM.Name,
+                    Description = departmentVM.Description,
+                    Code = departmentVM.Code,
+                    CreationDate = departmentVM.CreationDate
+                });
                 if (result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -49,7 +56,7 @@ namespace Demo.PL.Controllers
                 {
                     message = "Failed to create department.";
                     ModelState.AddModelError(string.Empty, message);
-                    return View(departmentDto);
+                    return View(departmentVM);
                 }
             }
             catch (Exception ex)
@@ -58,7 +65,7 @@ namespace Demo.PL.Controllers
                 if (_env.IsDevelopment())
                 {
                     message = ex.Message;
-                    return View(departmentDto);
+                    return View(departmentVM);
                 }
                 else
                 {
@@ -96,7 +103,7 @@ namespace Demo.PL.Controllers
             {
                 return NotFound();//404
             }
-            return View(new DepartmentEditViewModel()
+            return View(new DepartmentViewModel()
             {
                 Name = department.Name,
                 Description = department.Description,
@@ -105,7 +112,8 @@ namespace Demo.PL.Controllers
             });
         }
         [HttpPost]
-        public IActionResult Edit(int id, DepartmentEditViewModel departmentVM)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, DepartmentViewModel departmentVM)
         {
             if (!ModelState.IsValid)
             {
@@ -141,6 +149,7 @@ namespace Demo.PL.Controllers
             return View(departmentVM);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;

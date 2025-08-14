@@ -30,6 +30,7 @@ namespace Demo.PL.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeToCreateDto employeeDto)
         {
             if (!ModelState.IsValid)
@@ -113,6 +114,7 @@ namespace Demo.PL.Controllers
             });
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, EmployeeToUpdateDto employeeDto)
         {
             if (!ModelState.IsValid)
@@ -141,6 +143,7 @@ namespace Demo.PL.Controllers
             return View(employeeDto);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;
