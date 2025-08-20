@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Dtos.Employees
 {
-    public class EmployeeToCreateDto
+    public class EmployeeDto
     {
+        public int Id { get; set; }
         [Required]
         [MaxLength(50, ErrorMessage = "Max length should be 50 character")]
         [MinLength(5, ErrorMessage = "Min length should be 5 characters")]
@@ -41,5 +42,10 @@ namespace Demo.BLL.Dtos.Employees
         public Gender Gender { get; set; }
 
         public EmployeeType EmployeeType { get; set; }
+
+        [Display(Name = "Department")]
+        public int? DepartmentId { get; set; }
+
+        public string? DepartmentName { get; set; }
     }
 }

@@ -23,5 +23,7 @@ namespace Demo.BLL.Dtos.Employees
         public string Gender { get; set; }
         [Display(Name = "Employee Tyoe")]
         public string EmployeeType { get; set; }
+
+        public string? Department { get; set; }
     }
 }

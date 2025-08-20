@@ -1,6 +1,8 @@
-﻿using Demo.BLL.Dtos.Employees;
+﻿using Demo.BLL.Dtos.Departments;
+using Demo.BLL.Dtos.Employees;
 using Demo.BLL.Services.Employees;
 using Demo.DAL.Entities.Common.Enums;
+using Demo.DAL.Entities.Departments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.PL.Controllers
@@ -31,7 +33,7 @@ namespace Demo.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeToCreateDto employeeDto)
+        public IActionResult Create(EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -45,11 +47,13 @@ namespace Demo.PL.Controllers
                 _logger.LogInformation("Employee created with ID: {EmployeeId}", result);
                 if (result > 0)
                 {
+                    TempData["message"] = "Employee Created successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     message = "Failed to create Employee.";
+                    TempData["message"] = message;
                     ModelState.AddModelError(string.Empty, message);
                     return View(employeeDto);
                 }
@@ -98,7 +102,7 @@ namespace Demo.PL.Controllers
             {
                 return NotFound();//404
             }
-            return View(new EmployeeToUpdateDto()
+            return View(new EmployeeDto()
             {
                 Id = employee.Id,
                 Name = employee.Name,
@@ -111,11 +115,13 @@ namespace Demo.PL.Controllers
                 HiringDate = employee.HiringDate,
                 Gender = Enum.TryParse<Gender>(employee.Gender,out var gender) ? gender : default,
                 EmployeeType = Enum.TryParse<EmployeeType>(employee.EmployeeType, out var empType) ? empType : default,
+                DepartmentId = employee.DepartmentId,
+
             });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, EmployeeToUpdateDto employeeDto)
+        public IActionResult Edit(int id, EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -127,11 +133,14 @@ namespace Demo.PL.Controllers
                 var result = _EmployeeService.UpdateEmployee(employeeDto);
                 if (result > 0)
                 {
+                    TempData["message"] = "Employee Updated successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
+                    
                     message = "Failed to update Employee.";
+                    TempData["message"] = message;
                     ModelState.AddModelError(string.Empty, message);
                 }
             }
@@ -157,11 +166,13 @@ namespace Demo.PL.Controllers
                 var result = _EmployeeService.DeleteEmployee(id);
                 if (result)
                 {
+                    TempData["message"] = "Employee Deleted successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     message = "Failed to delete Employee.";
+                    TempData["message"] = message;
                     ModelState.AddModelError(string.Empty, message);
                 }
             }

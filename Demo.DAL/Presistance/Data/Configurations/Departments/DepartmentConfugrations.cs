@@ -18,6 +18,10 @@ namespace Demo.DAL.Presistance.Data.Configurations.Departments
             builder.Property(D => D.Code).HasColumnType("nvarchar(50)").IsRequired();
             builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("GETDATE()");//update and add
             builder.Property(D => D.CreatedOn).HasDefaultValueSql("GETDATE()");//add only
+            builder.HasMany(D=>D.Employees)
+                .WithOne(E => E.Department)
+                .HasForeignKey(E => E.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

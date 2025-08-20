@@ -11,8 +11,8 @@ namespace Demo.BLL.Services.Employees
     {
         IEnumerable<EmployeeToReturnDto> GetAllEmployees();
         EmployeeDetailsToReturnDto? GetEmployeeById(int id);
-        int CreateEmployee(EmployeeToCreateDto emplyee);
-        int UpdateEmployee(EmployeeToUpdateDto emplyee);
+        int CreateEmployee(EmployeeDto emplyee);
+        int UpdateEmployee(EmployeeDto emplyee);
         bool DeleteEmployee(int id);
     }
 }

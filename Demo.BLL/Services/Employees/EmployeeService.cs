@@ -1,6 +1,7 @@
 ﻿using Demo.BLL.Dtos.Employees;
 using Demo.DAL.Entities.Employees;
 using Demo.DAL.Presistance.Repositories.Employees;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Demo.BLL.Services.Employees
         {
             _employeeRepository = employeeRepository;
         }
-        public int CreateEmployee(EmployeeToCreateDto EmployeeDto)
+        public int CreateEmployee(EmployeeDto EmployeeDto)
         {
             Employee employee = new Employee()
             {
@@ -33,7 +34,8 @@ namespace Demo.BLL.Services.Employees
                 EmployeeType = EmployeeDto.EmployeeType,
                 CreatedBy = 1, 
                 LastModifiedBy = 1, 
-                LastModifiedOn = DateTime.UtcNow
+                LastModifiedOn = DateTime.UtcNow,
+                DepartmentId = EmployeeDto.DepartmentId
             };
             return _employeeRepository.AddT(employee);
         }
@@ -55,6 +57,7 @@ namespace Demo.BLL.Services.Employees
         {
             return _employeeRepository
             .GetAllQueryable()
+            .Include(E => E.Department)
             .Where(E => !E.IsDeleted)
             .Select(employee => new EmployeeToReturnDto
             {
@@ -65,7 +68,8 @@ namespace Demo.BLL.Services.Employees
                 Salary = employee.Salary,
                 Gender = employee.Gender.ToString(),
                 EmployeeType = employee.EmployeeType.ToString(),
-                IsActive = employee.IsActive
+                IsActive = employee.IsActive,
+                Department = employee.Department.Name // eager loading // cuz of include
             });
 
 
@@ -91,14 +95,16 @@ namespace Demo.BLL.Services.Employees
                     EmployeeType = employee.EmployeeType.ToString(),
                     IsActive = employee.IsActive,
                     CreatedBy = employee.CreatedBy,
-                    CreatedOn = employee.CreatedOn
+                    CreatedOn = employee.CreatedOn,
+                    Department = employee.Department.Name,// lazy loading
+                    DepartmentId = employee.DepartmentId,
                 };
             }
 
             return null!;
         }
 
-        public int UpdateEmployee(EmployeeToUpdateDto EmployeeDto)
+        public int UpdateEmployee(EmployeeDto EmployeeDto)
         {
             var employee = new Employee()
             {
@@ -115,7 +121,8 @@ namespace Demo.BLL.Services.Employees
                 EmployeeType = EmployeeDto.EmployeeType,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
-                LastModifiedOn = DateTime.UtcNow
+                LastModifiedOn = DateTime.UtcNow,
+                DepartmentId = EmployeeDto.DepartmentId
             };
             return _employeeRepository.UpdateT(employee);
         }

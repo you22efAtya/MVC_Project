@@ -50,11 +50,14 @@ namespace Demo.PL.Controllers
                 });
                 if (result > 0)
                 {
+                    TempData["message"] = "Department created successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
+                    
                     message = "Failed to create department.";
+                    TempData["message"] = message;
                     ModelState.AddModelError(string.Empty, message);
                     return View(departmentVM);
                 }
@@ -103,6 +106,7 @@ namespace Demo.PL.Controllers
             {
                 return NotFound();//404
             }
+            
             return View(new DepartmentViewModel()
             {
                 Name = department.Name,
@@ -133,11 +137,13 @@ namespace Demo.PL.Controllers
                 var result = _departmentService.UpdateDepartment(departmentDto);
                 if (result > 0)
                 {
+                    TempData["message"] = "Department Uodated successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     message = "Failed to update department.";
+                    TempData["message"] = message;
                     ModelState.AddModelError(string.Empty, message);
                 }
             }
@@ -163,6 +169,7 @@ namespace Demo.PL.Controllers
                 var result = _departmentService.DeleteDepartment(id);
                 if (result)
                 {
+                    TempData["message"] = "Department deleted successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else

@@ -4,6 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div aria-live="polite" aria-atomic="true" class="toast-container position-fixed p-3" style="bottom: 0; right: 0;">
+        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-success">Success!!</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Message"]
+            </div>
+        </div>
+    </div>
+}
+
 <h1>All Departments</h1>
 <br />
 <br />
@@ -20,6 +36,7 @@
                 <th>@Html.DisplayNameFor(d => d.EmployeeType)</th>
                 <th>@Html.DisplayNameFor(d => d.Age)</th>
                 <th>@Html.DisplayNameFor(d => d.Salary)</th>
+                <th>@Html.DisplayNameFor(d => d.Department)</th>
                 <th>@Html.DisplayNameFor(d => d.IsActive)</th>
                 <th>@Html.DisplayNameFor(d => d.Gender)</th>
                 <th>Details</th>
@@ -36,6 +53,7 @@
                     <td>@Html.DisplayFor( e=> employee.EmployeeType)</td>
                     <td>@Html.DisplayFor( e=> employee.Age)</td>
                     <td>@Html.DisplayFor( e=> employee.Salary)</td>
+                    <td>@Html.DisplayFor(e => employee.Department)</td>
                     <td>@Html.DisplayFor( e=> employee.IsActive)</td>
                     <td>@Html.DisplayFor( e=> employee.Gender)</td>
                     <partial name="_ButtonsPartial" model="@employee.Id" />
