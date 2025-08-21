@@ -1,4 +1,5 @@
-﻿using Demo.BLL.Dtos.Employees;
+﻿using Demo.BLL.Common.Services.AttachmentService;
+using Demo.BLL.Dtos.Employees;
 using Demo.DAL.Entities.Employees;
 using Demo.DAL.Presistance.Repositories.Employees;
 using Demo.DAL.Presistance.UnitOfWork;
@@ -14,6 +15,7 @@ namespace Demo.BLL.Services.Employees
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
         //private readonly IEmployeeRepository _employeeRepository;
 
@@ -22,10 +24,16 @@ namespace Demo.BLL.Services.Employees
         //    _employeeRepository = employeeRepository;
         //}
 
-        public EmployeeService(IUnitOfWork unitOfWork)
+
+
+        public EmployeeService(IUnitOfWork unitOfWork, IAttachmentService attachmentService)
         {
             _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
         }
+
+
+
         public int CreateEmployee(EmployeeDto EmployeeDto)
         {
             Employee employee = new Employee()
@@ -45,6 +53,10 @@ namespace Demo.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 DepartmentId = EmployeeDto.DepartmentId
             };
+            if (EmployeeDto.Image is not null)
+            {
+                employee.Image = _attachmentService.Upload(EmployeeDto.Image, "images");
+            }
             _unitOfWork.EmployeeRepository.AddT(employee);
             return _unitOfWork.Complete();
         }
@@ -78,6 +90,7 @@ namespace Demo.BLL.Services.Employees
                 Gender = employee.Gender.ToString(),
                 EmployeeType = employee.EmployeeType.ToString(),
                 IsActive = employee.IsActive,
+                Image = employee.Image,
                 Department = employee.Department.Name // eager loading // cuz of include
             });
 
@@ -105,7 +118,8 @@ namespace Demo.BLL.Services.Employees
                     IsActive = employee.IsActive,
                     CreatedBy = employee.CreatedBy,
                     CreatedOn = employee.CreatedOn,
-                    Department = employee.Department.Name,// lazy loading
+                    Image = employee.Image,
+                    Department = employee.Department?.Name ?? "No Department",// lazy loading
                     DepartmentId = employee.DepartmentId,
                 };
             }
