@@ -1,4 +1,5 @@
-﻿using Demo.BLL.Dtos;
+﻿using AutoMapper;
+using Demo.BLL.Dtos;
 using Demo.BLL.Dtos.Departments;
 using Demo.BLL.Services.Departments;
 using Demo.PL.ViewModels.Departments;
@@ -9,12 +10,14 @@ namespace Demo.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService _departmentService;
+        private readonly IMapper _mapper;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment env)
+        public DepartmentController(IDepartmentService departmentService,IMapper mapper, ILogger<DepartmentController> logger, IWebHostEnvironment env)
         {
             this._departmentService = departmentService;
+            this._mapper = mapper;
             this._logger = logger;
             this._env = env;
         }
@@ -41,13 +44,8 @@ namespace Demo.PL.Controllers
             var message = string.Empty;
             try
             {
-                var result = _departmentService.CreateDepartment(new DepartmentToCreateDto()
-                {
-                    Name = departmentVM.Name,
-                    Description = departmentVM.Description,
-                    Code = departmentVM.Code,
-                    CreationDate = departmentVM.CreationDate
-                });
+                var DepartmentToCreate = _mapper.Map<DepartmentToCreateDto>(departmentVM);
+                var result = _departmentService.CreateDepartment(DepartmentToCreate);
                 if (result > 0)
                 {
                     TempData["message"] = "Department created successfully.";

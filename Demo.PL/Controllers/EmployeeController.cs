@@ -20,9 +20,9 @@ namespace Demo.PL.Controllers
             this._env = env;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(String SearchValue)
         {
-            var employee = _EmployeeService.GetAllEmployees();
+            var employee = _EmployeeService.GetAllEmployees(SearchValue);
             return View(employee);
         }
 

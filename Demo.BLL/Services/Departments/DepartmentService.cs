@@ -7,20 +7,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Demo.DAL.Entities.Departments;
 using Demo.BLL.Dtos.Departments;
+using Demo.DAL.Presistance.UnitOfWork;
 
 namespace Demo.BLL.Services.Departments
 {
     public class DepartmentService : IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentService(IDepartmentRepository departmentRepository)
+        //private readonly IDepartmentRepository _departmentRepository;
+
+        //public DepartmentService(IDepartmentRepository departmentRepository)
+        //{
+        //    _departmentRepository = departmentRepository;
+        //}
+        public DepartmentService(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
         public IEnumerable<DepartmentToReturnDto> GetAllDepartments()
         {
-            var departments = _departmentRepository.GetAllQueryable().Where(D=> !D.IsDeleted).Select(department => new DepartmentToReturnDto
+            var departments = _unitOfWork.DepartmentRepository.GetAllQueryable().Where(D=> !D.IsDeleted).Select(department => new DepartmentToReturnDto
             {
                 Id = department.Id,
                 Name = department.Name,
@@ -33,7 +40,7 @@ namespace Demo.BLL.Services.Departments
 
         public DepartmentDetailsToReturnDto? GetDepartmentById(int id)
         {
-            var department = _departmentRepository.GetById(id);
+            var department = _unitOfWork.DepartmentRepository.GetById(id);
             if (department is not null)
             {
                 return new DepartmentDetailsToReturnDto
@@ -65,7 +72,8 @@ namespace Demo.BLL.Services.Departments
                 LastModifiedOn = DateTime.UtcNow,
                 CreatedBy = 1,
             };
-            return _departmentRepository.AddT(newDepartment);
+            _unitOfWork.DepartmentRepository.AddT(newDepartment);
+            return _unitOfWork.Complete();
         }
 
         public int UpdateDepartment(DepartmentToUpdateDto department)
@@ -81,17 +89,19 @@ namespace Demo.BLL.Services.Departments
                 LastModifiedOn = DateTime.UtcNow,
                 CreatedBy = 1,
             };
-            return _departmentRepository.UpdateT(departmentUdated);
+            _unitOfWork.DepartmentRepository.UpdateT(departmentUdated);
+            return _unitOfWork.Complete();
         }
 
         public bool DeleteDepartment(int id)
         {
-            var department = _departmentRepository.GetById(id);
+            var departmentRepo = _unitOfWork.DepartmentRepository;
+            var department = departmentRepo.GetById(id);
             if (department is not null)
             {
-                return _departmentRepository.DeleteT(department) > 0;
+                 departmentRepo.DeleteT(department);
             }
-            return false;
+            return _unitOfWork.Complete() > 0;
         }
 
 

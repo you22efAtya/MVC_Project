@@ -3,6 +3,8 @@ using Demo.BLL.Services.Employees;
 using Demo.DAL.Presistance.Data;
 using Demo.DAL.Presistance.Repositories.Departments;
 using Demo.DAL.Presistance.Repositories.Employees;
+using Demo.DAL.Presistance.UnitOfWork;
+using Demo.PL.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.PL
@@ -24,6 +26,9 @@ namespace Demo.PL
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
+            
 
             var app = builder.Build();
 

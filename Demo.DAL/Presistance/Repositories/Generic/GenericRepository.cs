@@ -32,23 +32,20 @@ namespace Demo.DAL.Presistance.Repositories.Generic
             //return _dbContext.Departments.Local.FirstOrDefault(d => d.Id == id);
             return _dbContext.Set<T>().Find(id);//search locally in case found ==> retrun else{send request to database}
         }
-        public int AddT(T entity)
+        public void AddT(T entity)
         {
             _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
         }
 
-        public int UpdateT(T entity)
+        public void UpdateT(T entity)
         {
             _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
         }
 
-        public int DeleteT(T entity)
+        public void DeleteT(T entity)
         {
             entity.IsDeleted = true;
             _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
         }
 
         public IQueryable<T> GetAllQueryable()
