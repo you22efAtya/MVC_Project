@@ -21,14 +21,14 @@ namespace Demo.DAL.Presistance.UnitOfWork
 
         public IDepartmentRepository DepartmentRepository => new DepartmentRepository(_dpContext);
 
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _dpContext.SaveChanges();
+            return await _dpContext.SaveChangesAsync();
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-             _dpContext.Dispose();
+            await _dpContext.DisposeAsync();
         }
     }
 }

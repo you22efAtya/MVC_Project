@@ -17,20 +17,20 @@ namespace Demo.DAL.Presistance.Repositories.Generic
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<T> GetAll(bool AsNoTracking = true)
+        public async Task<IEnumerable<T>> GetAllAsync(bool AsNoTracking = true)
         {
             if (AsNoTracking)
             {
-                return _dbContext.Set<T>().Where(X=> !X.IsDeleted).AsNoTracking().ToList();
+                return await _dbContext.Set<T>().Where(X=> !X.IsDeleted).AsNoTracking().ToListAsync();
             }
 
-            return _dbContext.Set<T>().Where(X => !X.IsDeleted).ToList();
+            return await _dbContext.Set<T>().Where(X => !X.IsDeleted).ToListAsync();
         }
 
-        public T? GetById(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             //return _dbContext.Departments.Local.FirstOrDefault(d => d.Id == id);
-            return _dbContext.Set<T>().Find(id);//search locally in case found ==> retrun else{send request to database}
+            return await _dbContext.Set<T>().FindAsync(id);//search locally in case found ==> retrun else{send request to database}
         }
         public void AddT(T entity)
         {
@@ -50,7 +50,7 @@ namespace Demo.DAL.Presistance.Repositories.Generic
 
         public IQueryable<T> GetAllQueryable()
         {
-            return _dbContext.Set<T>();
+            return  _dbContext.Set<T>();
         }
     }
 }

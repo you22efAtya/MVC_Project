@@ -4,6 +4,7 @@ using Demo.BLL.Services.Employees;
 using Demo.DAL.Entities.Common.Enums;
 using Demo.DAL.Entities.Departments;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
@@ -20,9 +21,9 @@ namespace Demo.PL.Controllers
             this._env = env;
         }
         [HttpGet]
-        public IActionResult Index(String SearchValue)
+        public async Task<IActionResult> Index(String SearchValue)
         {
-            var employee = _EmployeeService.GetAllEmployees(SearchValue);
+            var employee = await _EmployeeService.GetAllEmployeesAsync(SearchValue);
             return View(employee);
         }
 
@@ -33,7 +34,7 @@ namespace Demo.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeDto employeeDto)
+        public async Task<IActionResult> Create(EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -42,7 +43,7 @@ namespace Demo.PL.Controllers
             var message = string.Empty;
             try
             {
-                var result = _EmployeeService.CreateEmployee(employeeDto);
+                var result = await _EmployeeService.CreateEmployeeAsync(employeeDto);
                 //log the result
                 _logger.LogInformation("Employee created with ID: {EmployeeId}", result);
                 if (result > 0)
@@ -76,13 +77,13 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
             {
                 return BadRequest();//400
             }
-            var employee = _EmployeeService.GetEmployeeById(id.Value);
+            var employee = await _EmployeeService.GetEmployeeByIdAsync(id.Value);
             if (employee is null)
             {
                 return NotFound();//404
@@ -91,13 +92,13 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id is null)
             {
                 return BadRequest();//400
             }
-            var employee = _EmployeeService.GetEmployeeById(id.Value);
+            var employee = await _EmployeeService.GetEmployeeByIdAsync(id.Value);
             if (employee is null)
             {
                 return NotFound();//404
@@ -121,7 +122,7 @@ namespace Demo.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, EmployeeDto employeeDto)
+        public async Task<IActionResult> Edit(int id, EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -130,7 +131,7 @@ namespace Demo.PL.Controllers
             var message = string.Empty;
             try
             {
-                var result = _EmployeeService.UpdateEmployee(employeeDto);
+                var result = await _EmployeeService.UpdateEmployeeAsync(employeeDto);
                 if (result > 0)
                 {
                     TempData["message"] = "Employee Updated successfully.";
@@ -153,17 +154,17 @@ namespace Demo.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
             try
             {
-                var employee = _EmployeeService.GetEmployeeById(id);
+                var employee = await _EmployeeService.GetEmployeeByIdAsync(id);
                 if (employee is null)
                 {
                     return NotFound();//404
                 }
-                var result = _EmployeeService.DeleteEmployee(id);
+                var result = await _EmployeeService.DeleteEmployeeAsync(id);
                 if (result)
                 {
                     TempData["message"] = "Employee Deleted successfully.";

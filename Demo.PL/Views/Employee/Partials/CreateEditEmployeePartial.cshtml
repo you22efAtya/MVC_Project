@@ -1,7 +1,7 @@
 ﻿@model EmployeeDto
 @inject IDepartmentService departmentService
 @{
-    var Departments = new SelectList(departmentService.GetAllDepartments() as IEnumerable<DepartmentToReturnDto>, nameof(DepartmentToReturnDto.Id), nameof(DepartmentToReturnDto.Name));
+    var Departments = new SelectList(await departmentService.GetAllDepartmentsAsync() as IEnumerable<DepartmentToReturnDto>, nameof(DepartmentToReturnDto.Id), nameof(DepartmentToReturnDto.Name));
 }
 <form method="post" class="col-8" asp-controller="Employee" asp-action="@ViewBag.Action" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly"></div>

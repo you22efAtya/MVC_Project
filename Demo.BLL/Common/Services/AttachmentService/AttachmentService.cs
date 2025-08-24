@@ -11,7 +11,7 @@ namespace Demo.BLL.Common.Services.AttachmentService
     {
         public readonly List<string> _allowedExtensions = new List<string>{".jpg", ".jpeg", ".png" };
         public const int _maxFileSize = 2 * 1024 * 1024; // 2 MB
-        public string? Upload(IFormFile file, string folderName)
+        public async Task<string?> UploadAsync(IFormFile file, string folderName)
         {
             var extension = Path.GetExtension(file.FileName);
             if (!_allowedExtensions.Contains(extension))
@@ -26,7 +26,7 @@ namespace Demo.BLL.Common.Services.AttachmentService
             var fileName = $"{Guid.NewGuid()}{extension}";
             var filePath = Path.Combine(folderPath, fileName);
             using var fileStream = new FileStream(filePath, FileMode.Create);
-            file.CopyTo(fileStream);
+            await file.CopyToAsync(fileStream);
             return fileName;
         }
         public bool Delete(string filePath)

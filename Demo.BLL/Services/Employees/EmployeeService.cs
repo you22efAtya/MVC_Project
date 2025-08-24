@@ -34,7 +34,7 @@ namespace Demo.BLL.Services.Employees
 
 
 
-        public int CreateEmployee(EmployeeDto EmployeeDto)
+        public async Task<int> CreateEmployeeAsync(EmployeeDto EmployeeDto)
         {
             Employee employee = new Employee()
             {
@@ -55,28 +55,28 @@ namespace Demo.BLL.Services.Employees
             };
             if (EmployeeDto.Image is not null)
             {
-                employee.Image = _attachmentService.Upload(EmployeeDto.Image, "images");
+                employee.Image = await _attachmentService.UploadAsync(EmployeeDto.Image, "images");
             }
             _unitOfWork.EmployeeRepository.AddT(employee);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
 
-        public bool DeleteEmployee(int id)
+        public async Task<bool> DeleteEmployeeAsync(int id)
         {
-            var employee = _unitOfWork.EmployeeRepository.GetById(id);
+            var employee = await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
 
             if (employee is not null)
             {
                 _unitOfWork.EmployeeRepository.DeleteT(employee);
-                return _unitOfWork.Complete() > 0;
+                return await _unitOfWork.CompleteAsync() > 0;
             }
 
             return false;
         }
 
-        public IEnumerable<EmployeeToReturnDto> GetAllEmployees(string SearchValue)
+        public async Task<IEnumerable<EmployeeToReturnDto>> GetAllEmployeesAsync(string SearchValue)
         {
-            return _unitOfWork.EmployeeRepository
+            return await _unitOfWork.EmployeeRepository
             .GetAllQueryable()
             .Include(E => E.Department)
             .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(SearchValue) || E.Name.ToLower().Contains(SearchValue.ToLower())))
@@ -92,14 +92,14 @@ namespace Demo.BLL.Services.Employees
                 IsActive = employee.IsActive,
                 Image = employee.Image,
                 Department = employee.Department.Name // eager loading // cuz of include
-            });
+            }).ToListAsync();
 
 
         }
 
-        public EmployeeDetailsToReturnDto? GetEmployeeById(int id)
+        public async Task<EmployeeDetailsToReturnDto?> GetEmployeeByIdAsync(int id)
         {
-            var employee = _unitOfWork.EmployeeRepository.GetById(id);
+            var employee = await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
 
             if (employee is not null)
             {
@@ -127,7 +127,7 @@ namespace Demo.BLL.Services.Employees
             return null!;
         }
 
-        public int UpdateEmployee(EmployeeDto EmployeeDto)
+        public async Task<int> UpdateEmployeeAsync(EmployeeDto EmployeeDto)
         {
             var employee = new Employee()
             {
@@ -148,7 +148,7 @@ namespace Demo.BLL.Services.Employees
                 DepartmentId = EmployeeDto.DepartmentId
             };
             _unitOfWork.EmployeeRepository.UpdateT(employee);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
     }
 }
