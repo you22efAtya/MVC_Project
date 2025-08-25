@@ -3,11 +3,13 @@ using Demo.BLL.Dtos;
 using Demo.BLL.Dtos.Departments;
 using Demo.BLL.Services.Departments;
 using Demo.PL.ViewModels.Departments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService _departmentService;

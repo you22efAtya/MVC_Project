@@ -3,11 +3,13 @@ using Demo.BLL.Dtos.Employees;
 using Demo.BLL.Services.Employees;
 using Demo.DAL.Entities.Common.Enums;
 using Demo.DAL.Entities.Departments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _EmployeeService;
